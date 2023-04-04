@@ -7,8 +7,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
-    @InjectRepository(UsersEntity)
-    constructor( private readonly usersRepository: Repository<UsersEntity>){}
+    constructor(
+        @InjectRepository(UsersEntity)
+        private readonly usersRepository: Repository<UsersEntity>){}
 
     async findAll(){
         return await this.usersRepository.find({
@@ -16,12 +17,21 @@ export class UsersService {
         })
     }
 
-    async findOneOrFail(id: string){
+    async findByEmailOrFail(email: string){
         try{
-            return await this.usersRepository.findOneBy({id})
+            return await this.usersRepository.findOneByOrFail({email})
         }
         catch(error){
-            throw new NotFoundException(error.message)
+            throw new NotFoundException(error.message.error, {description: "E-mail não encontrado"})
+        }
+    }
+
+    async findOneOrFail(id: string){
+        try{
+            return await this.usersRepository.findOneByOrFail({id})
+        }
+        catch(error){
+            throw new NotFoundException(error.message.error, {description: "Usuário não encontrado"})
         }
     }
 
@@ -37,7 +47,7 @@ export class UsersService {
     }
 
     async destroy(id: string){
-        await this.usersRepository.findOneBy({id})
+        await this.findOneOrFail(id)
         this.usersRepository.softDelete({id})
     }
 }
