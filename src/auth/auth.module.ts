@@ -7,12 +7,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshTokenEntity } from './refreshToken.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
+    TypeOrmModule.forFeature([RefreshTokenEntity]),
   
     JwtModule.register({
       privateKey: process.env.JWT_SECRET_KEY,
