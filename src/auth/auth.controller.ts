@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpException, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -12,8 +12,7 @@ export class AuthController {
             return await this.authService.generateTokens(req.user)  
 
         }catch(error){
-            console.log('aa')
-            return new BadRequestException(error)
+            throw new HttpException(error, 400, { cause: new Error("Some Error") })
         }
     }
 
@@ -26,7 +25,7 @@ export class AuthController {
             return { accessToken, refreshToken};
 
         }catch(error){
-            return new BadRequestException(error)
+            throw new HttpException(error, 400, { cause: new Error("Some Error") })
         }
 }
 

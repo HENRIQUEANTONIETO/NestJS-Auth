@@ -7,6 +7,7 @@ import { randomBytes } from 'crypto';
 import { RefreshTokenEntity } from './refreshToken.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PayloadLogin } from './interfaces/payload-login.interface';
 
 @Injectable()
 export class AuthService {
@@ -32,17 +33,9 @@ export class AuthService {
         return user
     }
 
-    async login(user: UsersEntity){
-        const payload = {sub: user.id, email: user.email }
-
-        return{
-            token: this.jwtService.sign(payload)
-        }
-    }
-
     async generateTokens(user: UsersEntity){
         try{
-            const payload = {sub: user.id, email: user.email };
+            const payload: PayloadLogin = {sub: user.id, email: user.email};
            
             const accessToken = this.jwtService.sign(payload, { expiresIn: 60 });
         

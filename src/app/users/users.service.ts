@@ -4,6 +4,7 @@ import { UsersEntity } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { promises } from 'dns';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +25,11 @@ export class UsersService {
         catch(error){
             throw new NotFoundException(error.message.error, {description: "E-mail não encontrado"})
         }
+    }
+
+    async isValid(value: string): Promise<boolean>{
+        console.log(value)
+        return true
     }
 
     async findOneOrFail(id: string){
